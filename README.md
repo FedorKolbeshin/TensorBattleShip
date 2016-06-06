@@ -1,1 +1,2 @@
 # TensorBattleShip
+Игра "Морской бой"
