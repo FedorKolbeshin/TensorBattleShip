@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <script src="js/logic.js"></script>
+        <script>
+        </script>
+</head>
+<body>
+<div id="playerLayout" style="overflow-wrap:break-word;width:400px;height: 550px;margin-left:30%;">
+</div>
+<button id="1st" class="ship">ОдноПалубник</button>
+<button id="2nd" class="ship">ДвухПалубник</button>
+<button id="3rd" class="ship">ТрехПалубник</button>
+<button id="4th" class="ship">ЧетырехПалубник</button>
+<script>
+    generate();
+    var obj;
+    if (!/msie 8.0/i.test(navigator.userAgent))
+    {
+        [].forEach.call(document.querySelectorAll("button.ship"),function(item) {
+            item.addEventListener("click", function () {
+                obj = new ship(this.id);
+                this.setAttribute("disabled","true");
+            });
+        });
+    }
+    else for (var i=0;i<document.querySelectorAll("button").length;i++) {
+        document.querySelectorAll("button")[i].attachEvent("onclick", function () {
+            obj = new ship(event.srcElement.id);
+            event.srcElement.setAttribute("disabled","true");
+        });
+    }
+    console.log(document.querySelectorAll("button.ship[id='3rd']")[0].id);
+    function checkShipType (type)
+    {
+        var counter=0;
+        for (var i=0;i<ships.length;i++)
+        {
+            if (ships[i].type == type)
+            counter++;
+        }
+        return counter;
+    }
+</script>
+</body>
+</html>
