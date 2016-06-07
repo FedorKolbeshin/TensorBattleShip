@@ -2,9 +2,9 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <script src="js/ship.js"></script>
     <script src="js/logic.js"></script>
-        <script>
-        </script>
+    <script src="js/handlers.js"></script>
 </head>
 <body>
 <div id="playerLayout" style="overflow-wrap:break-word;width:550px;height: 550px;margin-left:30%;">
@@ -13,22 +13,31 @@
 <button id="2nd" class="ship">ДвухПалубник</button>
 <button id="3rd" class="ship">ТрехПалубник</button>
 <button id="4th" class="ship">ЧетырехПалубник</button>
+<button id="start">Начать игру</button>
 <script>
     generate();
     var obj;
     if (!/msie 8.0/i.test(navigator.userAgent))
     {
         [].forEach.call(document.querySelectorAll("button.ship"),function(item) {
-            item.addEventListener("click", function () {
-                obj = new ship(this.id);
-                this.setAttribute("disabled","true");
+            item.addEventListener("click", function (event) {
+                if (!shipAdding) {
+                    shipAdding=true;
+                    obj = new ship(this.id);
+                    this.setAttribute("disabled","true");
+                }
+                else alert("!!!!!!");
             });
         });
     }
-    else for (var i=0;i<document.querySelectorAll("button").length;i++) {
-        document.querySelectorAll("button")[i].attachEvent("onclick", function () {
-            obj = new ship(event.srcElement.id);
-            event.srcElement.setAttribute("disabled","true");
+    else for (var i=0;i<document.querySelectorAll("button.ship").length;i++) {
+        document.querySelectorAll("button.ship")[i].attachEvent("onclick", function () {
+            if (!shipAdding) {
+                shipAdding=true;
+                obj = new ship(event.srcElement.id);
+                event.srcElement.setAttribute("disabled","true");
+            }
+            else alert("!!!!!!");
         });
     }
     console.log(document.querySelectorAll("button.ship[id='3rd']")[0].id);
@@ -42,6 +51,7 @@
         }
         return counter;
     }
+    init();
 </script>
 </body>
 </html>
