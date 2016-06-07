@@ -67,16 +67,55 @@ ship.prototype.setCoord= function(coord,lineLength) {
         console.log("иди лесом");
         return "повтор";
     }
-    this.first = coord;
-    this.min = coord;
-    this.max = coord;
-    return true;
+    var checkResult=this.checkForPositionAvailability(coord,lineLength);
+    if (checkResult) {
+        this.first = coord;
+        this.min = coord;
+        this.max = coord;
+        return true;
+    }
+    return "сюда нельзя!";
+};
+ship.prototype.checkForPositionAvailability= function (currentPosition,lineLength){
+    if (this.checkCurrentDirect(currentPosition,lineLength) || this.checkCurrentDirect(currentPosition,1)) {
+        return true;
+    } else return false;
+};
+ship.prototype.checkCurrentDirect=function (currentPosition,direction){
+    var counter=0;
+
+    for (var i=1;i<+this.type.slice(0,1);i++)
+    {
+        if (direction == 1 && (+currentPosition+direction*i) % 10 == 0)
+        {
+            break;
+        }
+        if (availablePositions.indexOf(+currentPosition+direction*i) != -1)
+            counter++;
+        else break;
+    }
+
+    for (var i=1;i<+this.type.slice(0,1);i++)
+    {
+        if (direction == 1 && (currentPosition-direction*i) % 10 == 6)
+        {
+            break;
+        }
+        if (availablePositions.indexOf(currentPosition-direction*i) != -1)
+            counter++;
+        else break;
+    }
+    if (counter<+this.type.slice(0,1)-1)
+    {
+        return false;
+    }
+    else return true;
 };
 function clearBorders(coord,lineLength){
     if ((+coord+1) % lineLength !=0 ) removeFromSots(document.getElementById(+coord+1),availablePositions.indexOf(+coord+1));
     if ((+coord-1) % lineLength !=lineLength-1 ) removeFromSots(document.getElementById(+coord-1),availablePositions.indexOf(+coord-1));
-    removeFromSots(document.getElementById(+coord+7),availablePositions.indexOf(+coord+7));
-    removeFromSots(document.getElementById(+coord-7),availablePositions.indexOf(+coord-7));
+    removeFromSots(document.getElementById(+coord+lineLength),availablePositions.indexOf(+coord+lineLength));
+    removeFromSots(document.getElementById(+coord-lineLength),availablePositions.indexOf(+coord-lineLength));
 }
 function removeFromSots(div,index){
     if (index!=-1)
@@ -95,8 +134,7 @@ ship.prototype.setMinMax = function(coord)
 };
 
 function generate(){
-    alert("opa!!!");
-    for (var i=0;i<49;i++) {
+    for (var i=0;i<100;i++) {
         var div = document.createElement('div');
         div.className="lol";
         div.style.backgroundColor = "deepskyblue";
@@ -109,7 +147,7 @@ function generate(){
         if (div.addEventListener) {
             div.addEventListener("click", function () {
                 if (availablePositions.indexOf(+this.id) == -1) return;
-                var succeded = obj.setCoord(this.id,7);
+                var succeded = obj.setCoord(this.id,10);
                 console.log(obj.min+" "+obj.max);
                 if (succeded == true) {
                     this.style.backgroundColor = "black";
@@ -124,12 +162,9 @@ function generate(){
                 }
             });
         }
-        // if (difference<=3 || difference>3 && max-coord%linelenth==0 && min-coord%linelength==0)
         else div.attachEvent("onclick",function(event){
             if (availablePositions.indexOf(+event.srcElement.id) == -1) return;
-            console.log(availablePositions.indexOf(+event.srcElement.id));
-            console.log(obj.min+" "+obj.max);
-            var succeded = obj.setCoord(event.srcElement.id,7);
+            var succeded = obj.setCoord(event.srcElement.id,10);
             if (succeded == true) {
                 event.srcElement.style.backgroundColor = "black";
             }
