@@ -6,20 +6,25 @@ function ship(type){
 }
 
 ship.prototype.setCoord= function(coord,lineLength) {
-    if (this.min) {
+    console.log("этап "+1);
+    if (this.min != null) {
+        console.log("этап "+2);
         var top=Math.abs(+coord - this.max) % lineLength == 0 && Math.abs(+coord - this.min) % lineLength == 0
             && Math.abs(+coord - this.min) <= (+this.type.slice(0,1)-1) * lineLength
             && Math.abs(+coord - this.max) <= (+this.type.slice(0,1)-1) * lineLength;
-        if (Math.abs(+coord - this.min) <= +this.type.slice(0,1)-1 && Math.abs(+coord - this.max) <= +this.type.slice(0,1)-1
+        if (Math.abs(+coord - this.min) <= +this.type.slice(0,1)-1
+            && Math.abs(+coord - this.max) <= +this.type.slice(0,1)-1
+                && Math.floor(+this.min/10) == Math.floor(+coord/10)
             || top) {
-            if (this.first && this.second && this.third && this.fourth) {
+            console.log("этап "+3);
+            if (this.first!=null && this.second!=null && this.third!=null && this.fourth!=null) {
                 clearBorders(this.first,lineLength);
                 clearBorders(this.second,lineLength);
                 clearBorders(this.third,lineLength);
                 clearBorders(this.fourth,lineLength);
                 return false;
             }
-            if (this.first && this.second && this.third) {
+            if (this.first!=null && this.second!=null && this.third!=null) {
                 if (this.type == "3rd") {
                     clearBorders(this.first,lineLength);
                     clearBorders(this.second,lineLength);
@@ -31,7 +36,7 @@ ship.prototype.setCoord= function(coord,lineLength) {
                 if (this.first!=coord && this.second != coord && this.third != coord) this.fourth = coord;
                 return true;
             }
-            else if (this.first && this.second) {
+            else if (this.first!=null && this.second!=null) {
                 if (this.type == "2nd") {
                     clearBorders(this.first,lineLength);
                     clearBorders(this.second,lineLength);
@@ -41,8 +46,10 @@ ship.prototype.setCoord= function(coord,lineLength) {
                 if (this.first!=coord && this.second != coord) this.third = coord;
                 return true;
             }
-            else if (this.first) {
+            else if (this.first != null) {
+                console.log("этап "+4);
                 if (this.type == "1st") {
+                    console.log("этап "+5);
                     clearBorders(this.first,lineLength);
                     removeFromSots(document.getElementById(+coord),availablePositions.indexOf(+coord));
                     return false;
@@ -85,7 +92,7 @@ ship.prototype.checkCurrentDirect=function (currentPosition,direction){
 
     for (var i=1;i<+this.type.slice(0,1);i++)
     {
-        if (direction == 1 && (currentPosition-direction*i) % 10 == 6)
+        if (direction == 1 && (currentPosition-direction*i) % 10 == 9)
         {
             break;
         }
@@ -108,16 +115,14 @@ function clearBorders(coord,lineLength){
     if ((+coord+1) % lineLength !=0 )
     {
         removeFromSots(document.getElementById(+coord+1),availablePositions.indexOf(+coord+1));
-        removeFromSots(document.getElementById(coord-lineLength+1),availablePositions.indexOf(+coord-lineLength+1));
-        console.log(availablePositions.indexOf(+coord-lineLength+1)+"---");
+        removeFromSots(document.getElementById(coord-lineLength+1),availablePositions.indexOf(coord-lineLength+1));
         removeFromSots(document.getElementById(+coord+lineLength+1),availablePositions.indexOf(+coord+lineLength+1));
-        console.log(availablePositions.indexOf(+coord+lineLength+1)+"---");
     }
-    if ((+coord-1) % lineLength !=lineLength-1 )
+    console.log((-1) % lineLength);
+    if ((+coord-1) % lineLength != lineLength-1 && +coord!=0)
     {
         removeFromSots(document.getElementById(coord-1),availablePositions.indexOf(+coord-1));
         removeFromSots(document.getElementById(coord-lineLength-1),availablePositions.indexOf(coord-lineLength-1));
-        console.log(availablePositions.indexOf(+coord-lineLength-1)+"---");
         removeFromSots(document.getElementById(+coord+lineLength-1),availablePositions.indexOf(+coord+lineLength-1));
     }
     removeFromSots(document.getElementById(+coord+lineLength),availablePositions.indexOf(+coord+lineLength));

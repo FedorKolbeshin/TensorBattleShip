@@ -1,9 +1,13 @@
 /**
  * Created by fReDDy on 04.06.2016.
  */
+Array.prototype.randomElement = function () {
+    return this[Math.floor(Math.random() * this.length)]
+};
     var shipAdding=false;
 var availablePositions=[];
 var ships=[];
+var compships=[];
 if (!('indexOf' in Array.prototype)) {
     Array.prototype.indexOf= function(find, i /*opt*/) {
         if (i===undefined) i= 0;
@@ -65,8 +69,10 @@ function generate(){
                 obj=null;
             }
         });
-        document.getElementById("playerLayout").appendChild(div);
+        //document.getElementById("playerLayout").appendChild(div);
+        document.getElementById("compLayout").appendChild(div);
     }
+
     function getTypeShipCount (type){
         switch (type)
         {
@@ -92,5 +98,45 @@ function generate(){
             }
         }
 
+    }
+}
+function ComputerConstruct(obj) {
+    var getRandomCoord=availablePositions.randomElement();
+    var succeded = obj.setCoord(getRandomCoord,10);
+    document.getElementById(getRandomCoord).style.backgroundColor="black";
+    if (succeded == true) {
+        if (obj.type.slice(0,1) != 1) {
+            if (obj.checkCurrentDirect(getRandomCoord, 1))
+                buildShip(getRandomCoord, 1, obj);
+                else buildShip(getRandomCoord,10,obj);
+        }
+        obj.setCoord(getRandomCoord,10);
+        compships.push(obj);
+    }
+}
+function buildShip (getRandomCoord,direction,obj)
+{
+    var cursor=+getRandomCoord+direction;
+    while (availablePositions.indexOf(cursor) != -1 && cursor % 10 != 0)
+    {
+        var succeded=obj.setCoord(cursor,10);
+        if (succeded) {
+            document.getElementById(cursor).style.backgroundColor="black";
+            cursor+=direction;
+        }
+        console.log((cursor-getRandomCoord)/direction);
+        if ((cursor-getRandomCoord)/direction > obj.type.slice(0,1)-1) return;
+    }
+    var cellsRemaining=(obj.type.slice(0,1))-(cursor-getRandomCoord)/direction;
+    var cursor=getRandomCoord-direction;
+    while (cellsRemaining != 0)
+    {
+        var succeded=obj.setCoord(cursor,10);
+        if (succeded)
+        {
+            document.getElementById(cursor).style.backgroundColor="black";
+            cursor-=direction;
+            cellsRemaining--;
+        }
     }
 }
