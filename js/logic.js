@@ -1,13 +1,18 @@
 /**
  * Created by fReDDy on 04.06.2016.
  */
+//создаем свою функцию для массива для выбора случайного элемента
 Array.prototype.randomElement = function () {
     return this[Math.floor(Math.random() * this.length)]
 };
-    var shipAdding=false;
-var availablePositions=[];
-var ships=[];
-var compships=[];
+var
+    obj,
+    shipAdding=false,
+    availablePositions=[],
+    ships=[],
+    compships=[];
+
+//определяем функцию indexOf, если она не поддерживается браузером изначально
 if (!('indexOf' in Array.prototype)) {
     Array.prototype.indexOf= function(find, i /*opt*/) {
         if (i===undefined) i= 0;
@@ -20,87 +25,55 @@ if (!('indexOf' in Array.prototype)) {
     };
 }
 
+//генерируем первоначальное поле
 function generate(){
     for (var i=0;i<100;i++) {
         var div = document.createElement('div');
-        div.className="lol";
-        div.style.backgroundColor = "deepskyblue";
-        div.style.float = "left";
-        div.style.width = "50px";
-        div.style.height = "50px";
-        div.style.border = "2px solid red";
+        div.className="cell";
         div.id =i;
         availablePositions[i]=i;
-        if (div.addEventListener) {
-            div.addEventListener("click", function () {
-                if (availablePositions.indexOf(+this.id) == -1) return;
-                var succeded = obj.setCoord(this.id,10);
-                console.log(obj.min+" "+obj.max);
-                if (succeded == true) {
-                    this.style.backgroundColor = "black";
-                }
-                else if (succeded == false) {
-                    shipAdding=false;
-                    ships.push(obj);
-                    if (+checkShipType(obj.type) < +getTypeShipCount(obj.type))
-                    {
-                        document.querySelectorAll("button.ship[id='"+obj.type+"']")[0].removeAttribute("disabled");
-                    }
-                    obj=null;
-                }
-            });
-        }
-        else div.attachEvent("onclick",function(event){
-            if (availablePositions.indexOf(+event.srcElement.id) == -1) return;
-            var succeded = obj.setCoord(event.srcElement.id,10);
-            if (succeded == true) {
-                event.srcElement.style.backgroundColor = "black";
-            }
-            else if (succeded == false) {
-                shipAdding=false;
-                ships.push(obj);
-                var count=checkShipType(obj.type);
-                console.log("мы тут");
-                console.log(count);
-                if (+checkShipType(obj.type) < +getTypeShipCount(obj.type))
-                {
-                    document.querySelectorAll("button.ship[id='"+obj.type+"']")[0].removeAttribute("disabled");
-                }
-                obj=null;
-            }
-        });
-        //document.getElementById("playerLayout").appendChild(div);
-        document.getElementById("compLayout").appendChild(div);
+        document.getElementById("playerLayout").appendChild(div);
     }
-
-    function getTypeShipCount (type){
-        switch (type)
-        {
-            case "4th":
-            {
-                return 1;
-                break;
-            }
-            case "3rd":
-            {
-                return 2;
-                break;
-            }
-            case "2nd":
-            {
-                return 3;
-                break;
-            }
-            case "1st":
-            {
-                return 4;
-                break;
-            }
-        }
-
+    generateShips(compships);
+    availablePositions=[];
+    for (var i=0;i<document.getElementById("playerLayout").children.length;i++)
+    {
+        availablePositions[i]=i;
+        document.getElementById(i).style.backgroundColor="deepskyblue";
     }
+    generateShips(ships);
+
 }
-function ComputerConstruct(obj) {
+
+//функция, которая генерирует корабли
+function generateShips (currentShipMassive){
+    obj=new ship("4th");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("3rd");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("3rd");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("2nd");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("2nd");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("2nd");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("1st");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("1st");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("1st");
+    ComputerConstruct(obj,currentShipMassive);
+    obj=new ship("1st");
+    ComputerConstruct(obj,currentShipMassive);
+}
+
+/*
+Функция, которая строит корабль в соответствии с указанным типом и
+указанной коллекции кораблей(игрок или компьютер)
+ */
+function ComputerConstruct(obj,shipMassive) {
     var getRandomCoord=availablePositions.randomElement();
     var succeded = obj.setCoord(getRandomCoord,10);
     document.getElementById(getRandomCoord).style.backgroundColor="black";
@@ -111,9 +84,14 @@ function ComputerConstruct(obj) {
                 else buildShip(getRandomCoord,10,obj);
         }
         obj.setCoord(getRandomCoord,10);
-        compships.push(obj);
+        shipMassive.push(obj);
     }
 }
+
+/*
+функция, которая, отталкиваясь от указанной координаты, строит корабль вверх или вниз
+или влево или вправо в зависимости от направления
+ */
 function buildShip (getRandomCoord,direction,obj)
 {
     var cursor=+getRandomCoord+direction;
@@ -121,7 +99,7 @@ function buildShip (getRandomCoord,direction,obj)
     {
         var succeded=obj.setCoord(cursor,10);
         if (succeded) {
-            document.getElementById(cursor).style.backgroundColor="black";
+            document.getElementById(cursor).style.backgroundColor = "black";
             cursor+=direction;
         }
         console.log((cursor-getRandomCoord)/direction);
@@ -134,7 +112,7 @@ function buildShip (getRandomCoord,direction,obj)
         var succeded=obj.setCoord(cursor,10);
         if (succeded)
         {
-            document.getElementById(cursor).style.backgroundColor="black";
+            document.getElementById(cursor).style.backgroundColor = "black";
             cursor-=direction;
             cellsRemaining--;
         }

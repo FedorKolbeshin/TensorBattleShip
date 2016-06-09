@@ -2,58 +2,32 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="css/mainstyle.css">
     <script src="js/ship.js"></script>
     <script src="js/logic.js"></script>
     <script src="js/handlers.js"></script>
 </head>
 <body>
-<div id="playerLayout" style="overflow-wrap:break-word;width:550px;height: 550px;">
+<div id="0" class="backgroundDiv"></div>
+<div id="1" class="helpDiv">
+    <div style="height:70%;">
+        <center><h2>Введите имя пользователя</h2></center>
+        <center><input id="playerName" type="text"></center>
+    </div>
+    <center><button id="accept">Принять</button></center>
 </div>
-<div id="compLayout" style="overflow-wrap:break-word;width:550px;height: 550px;">
+<div style="float:left;">
+    <h2 id="ComputerField" style="font-style: italic"></h2>
+    <div id="playerLayout" style="float:left;overflow-wrap:break-word;width:360px;height: 330px;margin-bottom: 20px;"></div>
 </div>
-<button id="1st" class="ship">ОдноПалубник</button>
-<button id="2nd" class="ship">ДвухПалубник</button>
-<button id="3rd" class="ship">ТрехПалубник</button>
-<button id="4th" class="ship">ЧетырехПалубник</button>
-<button id="start">Начать игру</button>
-<script>
-    generate();
-    var obj;
-    if (!/msie 8.0/i.test(navigator.userAgent))
-    {
-        [].forEach.call(document.querySelectorAll("button.ship"),function(item) {
-            item.addEventListener("click", function (event) {
-                if (!shipAdding) {
-                    shipAdding=true;
-                    obj = new ship(this.id);
-                    this.setAttribute("disabled","true");
-                }
-                else alert("!!!!!!");
-            });
-        });
-    }
-    else for (var i=0;i<document.querySelectorAll("button.ship").length;i++) {
-        document.querySelectorAll("button.ship")[i].attachEvent("onclick", function () {
-            if (!shipAdding) {
-                shipAdding=true;
-                obj = new ship(event.srcElement.id);
-                event.srcElement.setAttribute("disabled","true");
-            }
-            else alert("!!!!!!");
-        });
-    }
-    console.log(document.querySelectorAll("button.ship[id='3rd']")[0].id);
-    function checkShipType (type)
-    {
-        var counter=0;
-        for (var i=0;i<ships.length;i++)
-        {
-            if (ships[i].type == type)
-            counter++;
-        }
-        return counter;
-    }
-    init();
-</script>
+<div style="float:left;">
+    <h2 id="UserField" style="font-style: italic"></h2>
+    <div id="field" style="float:left;max-width:360px;"></div>
+</div>
+<div style="clear: both;">
+    <button id="start">Начать игру</button>
+</div>
+<div id="status" style="clear:both;">
+</div>
 </body>
 </html>
